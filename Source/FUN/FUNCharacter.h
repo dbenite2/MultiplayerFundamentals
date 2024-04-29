@@ -7,6 +7,7 @@
 #include "Logging/LogMacros.h"
 #include "FUNCharacter.generated.h"
 
+class UTP_WeaponComponent;
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
@@ -64,6 +65,15 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
+
+	UFUNCTION(Server, Reliable)
+	void Server_Fire();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_Fire();
+
+	UPROPERTY()
+	UTP_WeaponComponent* Weapon{nullptr};
 
 protected:
 	/** Called for movement input */

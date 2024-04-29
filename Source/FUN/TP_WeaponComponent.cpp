@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "TP_PickUpComponent.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -25,7 +26,19 @@ void UTP_WeaponComponent::Fire()
 		return;
 	}
 
-	// Try and fire a projectile
+	auto* owner = GetOwner();
+
+	for(auto* Cmp: owner->GetComponents())
+		if(auto *PickUp = Cast<UTP_PickUpComponent>(Cmp))
+			if(auto *character = PickUp->PickUpCharacter )
+				character->Server_Fire();
+	
+}
+
+void UTP_WeaponComponent::Fire_SpawnBall() {
+	if (Character == nullptr || Character->GetController() == nullptr)
+		return;
+
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
@@ -44,14 +57,21 @@ void UTP_WeaponComponent::Fire()
 			World->SpawnActor<AFUNProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
+}
+
+void UTP_WeaponComponent::Fire_Sound() {
+	if (Character == nullptr || Character->GetController() == nullptr)
+		return;
 	
-	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
 	}
-	
-	// Try and play a firing animation if specified
+}
+
+void UTP_WeaponComponent::Fire_Animation() {
+	if (Character == nullptr || Character->GetController() == nullptr)
+		return;
 	if (FireAnimation != nullptr)
 	{
 		// Get the animation object for the arms mesh

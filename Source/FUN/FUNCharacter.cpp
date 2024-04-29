@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "TP_WeaponComponent.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -81,6 +82,18 @@ void AFUNCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 }
 
 
+void AFUNCharacter::Multi_Fire_Implementation() {
+	if (!Weapon)
+		return;
+	
+	auto role = GetLocalRole();
+	if(role == ROLE_AutonomousProxy || role == ROLE_SimulatedProxy) {
+		Weapon->Fire_Animation();
+		Weapon->Fire_Sound();
+	}
+	
+}
+
 void AFUNCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -115,4 +128,12 @@ void AFUNCharacter::SetHasRifle(bool bNewHasRifle)
 bool AFUNCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+void AFUNCharacter::Server_Fire_Implementation() {
+	if (!Weapon)
+		return;
+	Weapon->Fire_SpawnBall();
+	Multi_Fire();
+	
 }

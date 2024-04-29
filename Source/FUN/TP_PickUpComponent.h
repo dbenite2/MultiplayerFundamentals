@@ -22,6 +22,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnPickUp OnPickUp;
 
+	UPROPERTY()
+	AFUNCharacter* PickUpCharacter = nullptr;
+
 	UTP_PickUpComponent();
 protected:
 

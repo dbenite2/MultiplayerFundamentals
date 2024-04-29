@@ -49,6 +49,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void Fire_SpawnBall();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void Fire_Sound();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void Fire_Animation();
+	
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()

@@ -2,6 +2,8 @@
 
 #include "TP_PickUpComponent.h"
 
+#include "TP_WeaponComponent.h"
+
 UTP_PickUpComponent::UTP_PickUpComponent()
 {
 	// Setup the Sphere Collision
@@ -22,6 +24,14 @@ void UTP_PickUpComponent::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedCo
 	AFUNCharacter* Character = Cast<AFUNCharacter>(OtherActor);
 	if(Character != nullptr)
 	{
+		if (auto *Owner = GetOwner()) {
+			Owner->SetOwner(Character);
+			PickUpCharacter = Character;
+
+			for(auto* Cmp : Owner->GetComponents())
+				if(auto* Weapon = Cast<UTP_WeaponComponent>(Cmp))
+					Character->Weapon = Weapon;
+		}
 		// Notify that the actor is being picked up
 		OnPickUp.Broadcast(Character);
 
