@@ -8,9 +8,11 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "FunSwitch.h"
 #include "InputActionValue.h"
 #include "TP_WeaponComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -75,6 +77,8 @@ void AFUNCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFUNCharacter::Look);
+
+		EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Triggered, this, &AFUNCharacter::Interact);
 	}
 	else
 	{
@@ -143,4 +147,18 @@ void AFUNCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AFUNCharacter, Weapon);
+}
+
+void AFUNCharacter::Interact() {
+	const auto start = FirstPersonCameraComponent->GetComponentLocation();
+	const auto end = start + FirstPersonCameraComponent->GetForwardVector() * 100.f;
+	auto hit = FHitResult();
+
+	UKismetSystemLibrary::SphereTraceSingle(this, start, end,20.f, TraceTypeQuery1, false, {}, EDrawDebugTrace::ForDuration,  hit, true, FLinearColor::Red, FLinearColor::Blue);
+	if (auto* actor = hit.GetActor()) {
+		if (auto* FunSwitch = Cast<AFunSwitch>(actor)) {
+			FunSwitch->Toggle();
+		}
+	}
+	UE_LOG(LogTemp, Log, TEXT("Interacting"));
 }
