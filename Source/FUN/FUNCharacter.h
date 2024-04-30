@@ -72,7 +72,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multi_Fire();
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	UTP_WeaponComponent* Weapon{nullptr};
 
 protected:

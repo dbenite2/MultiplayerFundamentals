@@ -70,7 +70,7 @@ void UTP_WeaponComponent::Fire_Sound() {
 }
 
 void UTP_WeaponComponent::Fire_Animation() {
-	if (Character == nullptr || Character->GetController() == nullptr)
+	if (Character == nullptr)
 		return;
 	if (FireAnimation != nullptr)
 	{

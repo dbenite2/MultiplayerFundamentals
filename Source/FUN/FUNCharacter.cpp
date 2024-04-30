@@ -11,6 +11,7 @@
 #include "InputActionValue.h"
 #include "TP_WeaponComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Net/UnrealNetwork.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -135,5 +136,11 @@ void AFUNCharacter::Server_Fire_Implementation() {
 		return;
 	Weapon->Fire_SpawnBall();
 	Multi_Fire();
-	
+}
+
+
+void AFUNCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFUNCharacter, Weapon);
 }
