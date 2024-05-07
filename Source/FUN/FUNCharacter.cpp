@@ -156,9 +156,17 @@ void AFUNCharacter::Interact() {
 
 	UKismetSystemLibrary::SphereTraceSingle(this, start, end,20.f, TraceTypeQuery1, false, {}, EDrawDebugTrace::ForDuration,  hit, true, FLinearColor::Red, FLinearColor::Blue);
 	if (auto* actor = hit.GetActor()) {
-		if (auto* FunSwitch = Cast<AFunSwitch>(actor)) {
-			FunSwitch->Toggle();
+		if (auto* interface = Cast<IInteractable>(actor)) {
+			if(UKismetSystemLibrary::DoesImplementInterface(actor, UInteractable::StaticClass())) {
+				Server_Interact(actor);
+			}
 		}
 	}
-	UE_LOG(LogTemp, Log, TEXT("Interacting"));
+}
+
+
+void AFUNCharacter::Server_Interact_Implementation(AActor* actor) {
+	if (!actor) return;
+
+	IInteractable::Execute_Interact(actor);
 }

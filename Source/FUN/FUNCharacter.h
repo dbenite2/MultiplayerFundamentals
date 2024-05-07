@@ -88,6 +88,9 @@ protected:
 
 	void Interact();
 
+	UFUNCTION(Server, Reliable)
+	void Server_Interact(AActor* actor);
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;

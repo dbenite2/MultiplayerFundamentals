@@ -3,11 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interactable.h"
 #include "GameFramework/Actor.h"
 #include "FunSwitch.generated.h"
 
+class UPointLightComponent;
+
 UCLASS()
-class FUN_API AFunSwitch : public AActor
+class FUN_API AFunSwitch : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
@@ -22,6 +25,9 @@ class FUN_API AFunSwitch : public AActor
 
 	UPROPERTY(EditDefaultsOnly)
 	FRotator PivotRotationOff{};
+
+	UPROPERTY(EditDefaultsOnly)
+	UPointLightComponent* Light{nullptr};
 	
 public:
 	AFunSwitch();
@@ -31,6 +37,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Toggle();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_Toggle();
+
+	virtual void Interact_Implementation() override;
 
 protected:
 	virtual void BeginPlay() override;
